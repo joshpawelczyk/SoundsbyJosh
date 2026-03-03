@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio Admin — soundsbyjosh</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:     #0c0a08;
+      --bg2:    #131008;
+      --card:   rgba(255,150,50,0.04);
+      --border: rgba(255,180,80,0.1);
+      --accent: #e8621a;
+      --accent-hover: #ff7a30;
+      --text:   #f5f0e8;
+      --muted:  #9a8a74;
+      --green:  #2ecc71;
+      --red:    #e74c3c;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+
+    .wrap { max-width: 760px; margin: 0 auto; }
+
+    /* ── Header ── */
+    header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+    .logo { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
+    .logo span { color: var(--accent); }
+    h1 { font-size: 1.6rem; font-weight: 700; }
+    .back-link { font-size: 0.82rem; color: var(--muted); text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem; margin-top: 0.5rem; transition: color 0.2s; }
+    .back-link:hover { color: var(--text); }
+
+    /* ── Login gate ── */
+    #login-gate { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh; gap: 1rem; }
+    #login-gate h2 { font-size: 1.1rem; color: var(--muted); }
+    .pw-row { display: flex; gap: 0.5rem; width: 100%; max-width: 360px; }
+    .pw-row input { flex: 1; }
+
+    /* ── Form elements ── */
+    input, textarea, select {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      padding: 0.7rem 1rem;
+      transition: border-color 0.2s;
+      width: 100%;
+    }
+    input:focus, textarea:focus { outline: none; border-color: rgba(232,98,26,0.5); }
+    input::placeholder { color: var(--muted); }
+
+    .btn {
+      background: var(--accent);
+      border: none;
+      border-radius: 8px;
+      color: #000;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 700;
+      padding: 0.7rem 1.4rem;
+      transition: background 0.2s, transform 0.1s;
+      white-space: nowrap;
+    }
+    .btn:hover { background: var(--accent-hover); transform: translateY(-1px); }
+    .btn:disabled { background: var(--muted); cursor: not-allowed; transform: none; }
+    .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--muted); }
+    .btn-ghost:hover { background: var(--card); color: var(--text); }
+    .btn-danger { background: transparent; border: 1px solid rgba(231,76,60,0.3); color: var(--red); font-size: 0.78rem; padding: 0.3rem 0.7rem; }
+    .btn-danger:hover { background: rgba(231,76,60,0.1); border-color: var(--red); color: var(--red); }
+
+    /* ── Add episode form ── */
+    .add-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+    .add-card h2 { font-size: 1rem; font-weight: 700; margin-bottom: 1.25rem; }
+    .url-row { display: flex; gap: 0.5rem; margin-bottom: 0.75rem; }
+    .url-row input { font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; }
+
+    /* Preview card shown after fetching metadata */
+    .preview {
+      background: rgba(232,98,26,0.06);
+      border: 1px solid rgba(232,98,26,0.2);
+      border-radius: 10px;
+      padding: 1rem 1.1rem;
+      margin-top: 1rem;
+      display: none;
+    }
+    .preview.visible { display: block; }
+    .preview-row { display: flex; gap: 1rem; align-items: flex-start; }
+    .preview-thumb { width: 64px; height: 64px; border-radius: 8px; object-fit: cover; flex-shrink: 0; background: var(--bg2); }
+    .preview-info { flex: 1; min-width: 0; }
+    .preview-title { font-size: 0.92rem; font-weight: 700; margin-bottom: 0.25rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .preview-meta { font-size: 0.78rem; color: var(--muted); display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.6rem; }
+    .preview-badge { font-size: 0.68rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: 999px; }
+    .badge-spotify { background: rgba(29,185,84,0.15); color: #1db954; }
+    .badge-youtube { background: rgba(255,0,0,0.12); color: #ff4444; }
+    .badge-social  { background: rgba(232,98,26,0.15); color: var(--accent); }
+
+    /* Overrides (shown if detection needs correction) */
+    .overrides { margin-top: 0.9rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+    .overrides label { font-size: 0.75rem; color: var(--muted); display: block; margin-bottom: 0.3rem; }
+    .overrides select, .overrides input { font-size: 0.82rem; padding: 0.5rem 0.75rem; }
+    .override-title-row { grid-column: 1 / -1; }
+    .preview-actions { margin-top: 1rem; display: flex; gap: 0.6rem; justify-content: flex-end; }
+
+    /* Status messages */
+    .status { font-size: 0.82rem; padding: 0.6rem 0.9rem; border-radius: 8px; margin-top: 0.75rem; display: none; }
+    .status.visible { display: block; }
+    .status.ok  { background: rgba(46,204,113,0.1); color: var(--green); border: 1px solid rgba(46,204,113,0.25); }
+    .status.err { background: rgba(231,76,60,0.1);  color: var(--red);   border: 1px solid rgba(231,76,60,0.25); }
+    .status.loading { background: rgba(255,180,80,0.08); color: var(--muted); border: 1px solid var(--border); }
+
+    /* ── Episodes list ── */
+    .list-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+    .list-header h2 { font-size: 1rem; font-weight: 700; }
+    .ep-count { font-size: 0.78rem; color: var(--muted); }
+
+    .ep-list { display: flex; flex-direction: column; gap: 0.6rem; }
+
+    .ep-row {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.85rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      transition: border-color 0.2s;
+    }
+    .ep-row:hover { border-color: rgba(255,180,80,0.2); }
+    .ep-row-thumb { width: 40px; height: 40px; border-radius: 6px; object-fit: cover; flex-shrink: 0; background: var(--bg2); }
+    .ep-row-info { flex: 1; min-width: 0; }
+    .ep-row-title { font-size: 0.85rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 0.2rem; }
+    .ep-row-meta { font-size: 0.73rem; color: var(--muted); display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
+    .ep-row-actions { display: flex; gap: 0.4rem; flex-shrink: 0; }
+
+    .empty-state { text-align: center; padding: 3rem 1rem; color: var(--muted); font-size: 0.9rem; }
+
+    .divider { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+
+    /* Spinner */
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.2); border-top-color: var(--text); border-radius: 50%; animation: spin 0.6s linear infinite; vertical-align: middle; margin-right: 0.4rem; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <p class="logo">sounds<span>by</span>josh</p>
+    <h1>Portfolio Admin</h1>
+    <a href="/" class="back-link">← Back to site</a>
+  </header>
+
+  <!-- LOGIN GATE -->
+  <div id="login-gate">
+    <h2>Enter admin password</h2>
+    <div class="pw-row">
+      <input type="password" id="pw-input" placeholder="Password" onkeydown="if(event.key==='Enter')login()">
+      <button class="btn" onclick="login()">Unlock</button>
+    </div>
+    <div id="login-status" class="status"></div>
+  </div>
+
+  <!-- ADMIN PANEL (hidden until logged in) -->
+  <div id="admin-panel" style="display:none;">
+
+    <!-- ADD EPISODE -->
+    <div class="add-card">
+      <h2>Add episode or clip</h2>
+      <div class="url-row">
+        <input type="url" id="url-input" placeholder="Paste a Spotify or YouTube URL…" oninput="clearPreview()">
+        <button class="btn" id="fetch-btn" onclick="fetchMeta()">Preview</button>
+      </div>
+
+      <!-- PREVIEW -->
+      <div class="preview" id="preview">
+        <div class="preview-row">
+          <img class="preview-thumb" id="preview-thumb" src="" alt="">
+          <div class="preview-info">
+            <p class="preview-title" id="preview-title"></p>
+            <div class="preview-meta">
+              <span class="preview-badge" id="preview-platform-badge"></span>
+              <span id="preview-show-name"></span>
+              <span id="preview-stats"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Overrides — let Josh correct anything wrong -->
+        <div class="overrides">
+          <div>
+            <label>Show</label>
+            <select id="override-show">
+              <option value="moderncto">Modern CTO</option>
+              <option value="levelup">Level Up Lifestyle</option>
+              <option value="geniuslife">The Genius Life</option>
+              <option value="toolbox">Toolbox for the Trades</option>
+              <option value="pestinclass">Pest in Class</option>
+              <option value="goodquestion">Good Question</option>
+              <option value="mhpbroker">MHP Broker's Tips &amp; Tricks</option>
+              <option value="afterfurther">After Further Consideration</option>
+              <option value="masteringst">Mastering ServiceTitan</option>
+              <option value="missionadmissions">Mission Admissions</option>
+              <option value="theapplication">The Application</option>
+              <option value="hiddengem">The Hidden Gem</option>
+              <option value="aggiegrowth">Aggie Growth Hacks</option>
+              <option value="madeofmettle">Made of Mettle Motivation</option>
+              <option value="victorygroove">Victory Groove</option>
+              <option value="moneyrealestate">Money, Real Estate &amp; More</option>
+            </select>
+          </div>
+          <div>
+            <label>Content type</label>
+            <select id="override-type">
+              <option value="spotify">Spotify Episode</option>
+              <option value="youtube">YouTube Episode</option>
+              <option value="social">Social Clip</option>
+            </select>
+          </div>
+          <div class="override-title-row">
+            <label>Title (edit if needed)</label>
+            <input type="text" id="override-title" placeholder="Episode title">
+          </div>
+        </div>
+
+        <div class="preview-actions">
+          <button class="btn btn-ghost" onclick="clearPreview()">Cancel</button>
+          <button class="btn" id="save-btn" onclick="saveEpisode()">Save to portfolio</button>
+        </div>
+      </div>
+
+      <div id="add-status" class="status"></div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- EPISODES LIST -->
+    <div class="list-header">
+      <h2>Saved episodes</h2>
+      <span class="ep-count" id="ep-count"></span>
+    </div>
+    <div class="ep-list" id="ep-list">
+      <div class="empty-state">Loading…</div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  let password = '';
+  let currentMeta = null;
+
+  // ── Auth ──────────────────────────────────────────────────────────────────
+  async function login() {
+    const pw = document.getElementById('pw-input').value.trim();
+    if (!pw) return;
+    setStatus('login-status', 'loading', 'Checking…');
+
+    // Test the password by hitting the episodes endpoint
+    const res = await fetch('/.netlify/functions/episodes', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${pw}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ _test: true }),
+    });
+
+    if (res.status === 401) {
+      setStatus('login-status', 'err', 'Wrong password.');
+      return;
+    }
+
+    password = pw;
+    document.getElementById('login-gate').style.display  = 'none';
+    document.getElementById('admin-panel').style.display = 'block';
+    loadEpisodes();
+  }
+
+  // ── Fetch metadata preview ────────────────────────────────────────────────
+  async function fetchMeta() {
+    const url = document.getElementById('url-input').value.trim();
+    if (!url) return;
+
+    const btn = document.getElementById('fetch-btn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>Fetching…';
+    setStatus('add-status', 'loading', 'Looking up metadata…');
+
+    try {
+      const res = await fetch(`/.netlify/functions/fetch-meta?url=${encodeURIComponent(url)}`);
+      const meta = await res.json();
+
+      if (!res.ok) {
+        setStatus('add-status', 'err', meta.error || 'Could not fetch metadata.');
+        return;
+      }
+
+      currentMeta = meta;
+      showPreview(meta);
+      setStatus('add-status', '', '');
+
+    } catch (err) {
+      setStatus('add-status', 'err', 'Network error. Try again.');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Preview';
+    }
+  }
+
+  function showPreview(meta) {
+    document.getElementById('preview-thumb').src = meta.thumbnail || '';
+    document.getElementById('preview-title').textContent = meta.title || '(no title)';
+    document.getElementById('override-title').value = meta.title || '';
+
+    const badge = document.getElementById('preview-platform-badge');
+    const typeMap = { spotify: ['Spotify', 'badge-spotify'], youtube: ['YouTube', 'badge-youtube'], 'youtube-short': ['YouTube Short', 'badge-social'], social: ['Social Clip', 'badge-social'] };
+    const [label, cls] = typeMap[meta.platform] || ['Unknown', 'badge-social'];
+    badge.textContent = label;
+    badge.className = `preview-badge ${cls}`;
+
+    document.getElementById('preview-show-name').textContent = meta.showName || '';
+
+    if (meta.views != null) {
+      document.getElementById('preview-stats').textContent = `👁️ ${meta.views.toLocaleString()}  👍 ${meta.likes?.toLocaleString() || 0}`;
+    } else {
+      document.getElementById('preview-stats').textContent = '';
+    }
+
+    // Set dropdowns to auto-detected values
+    setSelectVal('override-show', meta.showKey);
+    setSelectVal('override-type', meta.contentType);
+
+    document.getElementById('preview').classList.add('visible');
+  }
+
+  function setSelectVal(id, val) {
+    const sel = document.getElementById(id);
+    for (const opt of sel.options) {
+      if (opt.value === val) { sel.value = val; return; }
+    }
+    // If not found, leave as-is
+  }
+
+  function clearPreview() {
+    currentMeta = null;
+    document.getElementById('preview').classList.remove('visible');
+    document.getElementById('url-input').value = '';
+    setStatus('add-status', '', '');
+  }
+
+  // ── Save episode ──────────────────────────────────────────────────────────
+  async function saveEpisode() {
+    if (!currentMeta) return;
+
+    const episode = {
+      ...currentMeta,
+      title:       document.getElementById('override-title').value.trim() || currentMeta.title,
+      showKey:     document.getElementById('override-show').value,
+      contentType: document.getElementById('override-type').value,
+    };
+
+    // Update showName to match override
+    const showNames = {
+      moderncto:'Modern CTO', levelup:'Level Up Lifestyle', geniuslife:'The Genius Life',
+      toolbox:'Toolbox for the Trades', pestinclass:'Pest in Class', goodquestion:'Good Question',
+      mhpbroker:"MHP Broker's Tips & Tricks", afterfurther:'After Further Consideration',
+      masteringst:'Mastering ServiceTitan', missionadmissions:'Mission Admissions',
+      theapplication:'The Application', hiddengem:'The Hidden Gem',
+      aggiegrowth:'Aggie Growth Hacks', madeofmettle:'Made of Mettle Motivation',
+      victorygroove:'Victory Groove', moneyrealestate:'Money, Real Estate & More',
+    };
+    episode.showName = showNames[episode.showKey] || episode.showName;
+
+    const btn = document.getElementById('save-btn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>Saving…';
+
+    try {
+      const res = await fetch('/.netlify/functions/episodes', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${password}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify(episode),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        setStatus('add-status', 'err', data.error || 'Save failed.');
+        return;
+      }
+
+      setStatus('add-status', 'ok', `✓ "${episode.title}" added to portfolio.`);
+      clearPreview();
+      loadEpisodes();
+
+    } catch (err) {
+      setStatus('add-status', 'err', 'Network error. Try again.');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Save to portfolio';
+    }
+  }
+
+  // ── Load & render episodes list ───────────────────────────────────────────
+  async function loadEpisodes() {
+    const list = document.getElementById('ep-list');
+    list.innerHTML = '<div class="empty-state">Loading…</div>';
+
+    try {
+      const res = await fetch('/.netlify/functions/episodes');
+      const episodes = await res.json();
+
+      document.getElementById('ep-count').textContent = `${episodes.length} episode${episodes.length !== 1 ? 's' : ''}`;
+
+      if (!episodes.length) {
+        list.innerHTML = '<div class="empty-state">No episodes yet. Add one above.</div>';
+        return;
+      }
+
+      list.innerHTML = '';
+      for (const ep of episodes) {
+        const badgeMap = { spotify: 'badge-spotify', youtube: 'badge-youtube', social: 'badge-social', 'youtube-short': 'badge-social' };
+        const badgeCls = badgeMap[ep.contentType] || badgeMap[ep.platform] || 'badge-social';
+        const labelMap = { spotify: 'Spotify', youtube: 'YouTube', social: 'Social', 'youtube-short': 'Short' };
+        const label = labelMap[ep.contentType] || ep.platform || '';
+
+        const row = document.createElement('div');
+        row.className = 'ep-row';
+        row.innerHTML = `
+          <img class="ep-row-thumb" src="${ep.thumbnail || ''}" alt="">
+          <div class="ep-row-info">
+            <p class="ep-row-title">${ep.title || '(untitled)'}</p>
+            <div class="ep-row-meta">
+              <span class="preview-badge ${badgeCls}">${label}</span>
+              <span>${ep.showName || ''}</span>
+              ${ep.views != null ? `<span>👁️ ${ep.views.toLocaleString()}</span>` : ''}
+            </div>
+          </div>
+          <div class="ep-row-actions">
+            <button class="btn btn-danger" onclick="deleteEpisode('${ep.id}', this)">Remove</button>
+          </div>
+        `;
+        list.appendChild(row);
+      }
+    } catch (err) {
+      list.innerHTML = `<div class="empty-state">Failed to load episodes: ${err.message}</div>`;
+    }
+  }
+
+  // ── Delete episode ────────────────────────────────────────────────────────
+  async function deleteEpisode(id, btn) {
+    if (!confirm('Remove this episode from the portfolio?')) return;
+    btn.disabled = true;
+    btn.textContent = '…';
+
+    try {
+      const res = await fetch(`/.netlify/functions/episodes?id=${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${password}` },
+      });
+      if (res.ok) loadEpisodes();
+      else btn.disabled = false;
+    } catch {
+      btn.disabled = false;
+    }
+  }
+
+  // ── Utility ───────────────────────────────────────────────────────────────
+  function setStatus(id, type, msg) {
+    const el = document.getElementById(id);
+    el.className = 'status' + (type ? ` ${type} visible` : '');
+    el.textContent = msg;
+  }
+
+  // Allow pressing Enter in URL field
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('url-input')?.addEventListener('keydown', e => {
+      if (e.key === 'Enter') fetchMeta();
+    });
+  });
+</script>
+</body>
+</html>

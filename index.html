@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Josh Pawelczyk — Audio Production & Sound Design</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0c0a08; --bg2: #131008; --bg3: #1a1408;
+      --accent: #e8621a; --accent-hover: #ff7a30; --accent2: #c0392b;
+      --text: #f5f0e8; --muted: #9a8a74;
+      --border: rgba(255,180,80,0.1); --card: rgba(255,150,50,0.04);
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; overflow-x: hidden; }
+
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1.2rem 5%; background: rgba(12,10,8,0.92); backdrop-filter: blur(14px); border-bottom: 1px solid var(--border); }
+    .nav-logo { font-size: 1.1rem; font-weight: 700; color: var(--text); text-decoration: none; }
+    .nav-logo span { color: var(--accent); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta { background: var(--accent) !important; color: #000 !important; padding: 0.5rem 1.2rem; border-radius: 6px; font-weight: 600 !important; transition: background 0.2s; }
+    .nav-cta:hover { background: var(--accent-hover) !important; }
+
+    #hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 8rem 5% 4rem; position: relative; overflow: hidden; }
+    .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(232,98,26,0.11) 0%, transparent 70%), radial-gradient(ellipse 60% 40% at 80% 80%, rgba(192,57,43,0.07) 0%, transparent 60%); }
+    .waveform { position: absolute; bottom: 0; left: 0; right: 0; height: 120px; opacity: 0.12; display: flex; align-items: flex-end; gap: 3px; padding: 0 5%; }
+    .waveform-bar { flex: 1; background: var(--accent); border-radius: 2px 2px 0 0; animation: wave 1.8s ease-in-out infinite; }
+    @keyframes wave { 0%, 100% { transform: scaleY(0.3); } 50% { transform: scaleY(1); } }
+    .hero-content { position: relative; max-width: 800px; }
+    .hero-eyebrow { display: inline-block; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem; }
+    .hero-title { font-family: 'Playfair Display', serif; font-size: clamp(2.8rem, 6vw, 5rem); line-height: 1.1; margin-bottom: 1.5rem; }
+    .hero-title em { color: var(--accent); font-style: italic; }
+    .hero-sub { font-size: 1.15rem; color: var(--muted); max-width: 520px; margin: 0 auto 2.5rem; }
+    .hero-tags { display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center; margin-bottom: 2.5rem; }
+    .hero-tag { font-size: 0.8rem; font-weight: 500; color: var(--muted); border: 1px solid var(--border); padding: 0.35rem 0.9rem; border-radius: 999px; }
+    .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn-primary { background: var(--accent); color: #000; padding: 0.85rem 2rem; border-radius: 8px; font-weight: 700; font-size: 0.95rem; text-decoration: none; transition: background 0.2s, transform 0.1s; display: inline-block; }
+    .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
+    .btn-ghost { background: transparent; color: var(--text); padding: 0.85rem 2rem; border-radius: 8px; font-weight: 600; font-size: 0.95rem; text-decoration: none; border: 1px solid var(--border); transition: border-color 0.2s, transform 0.1s; display: inline-block; }
+    .btn-ghost:hover { border-color: rgba(255,180,80,0.4); transform: translateY(-1px); }
+
+    section { padding: 6rem 5%; }
+    .section-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.75rem; }
+    .section-title { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 3.5vw, 2.8rem); margin-bottom: 1rem; line-height: 1.2; }
+    .section-sub { color: var(--muted); max-width: 520px; font-size: 1rem; }
+    .section-header { margin-bottom: 3.5rem; }
+    .max-w { max-width: 1200px; margin: 0 auto; }
+
+    /* SERVICES */
+    #services { background: var(--bg2); }
+    .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+    .service-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; transition: border-color 0.3s, transform 0.2s; }
+    .service-card:hover { border-color: rgba(232,98,26,0.4); transform: translateY(-4px); }
+    .service-icon { font-size: 2rem; margin-bottom: 1rem; }
+    .service-title { font-size: 1.15rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .service-desc { color: var(--muted); font-size: 0.92rem; line-height: 1.7; margin-bottom: 1.25rem; }
+    .service-bullets { list-style: none; margin-bottom: 1.5rem; }
+    .service-bullets li { font-size: 0.85rem; color: var(--muted); padding: 0.2rem 0 0.2rem 1.1rem; position: relative; }
+    .service-bullets li::before { content: '→'; position: absolute; left: 0; color: var(--accent); }
+    .service-link { font-size: 0.85rem; font-weight: 600; color: var(--accent); text-decoration: none; }
+    .service-link:hover { text-decoration: underline; }
+
+    /* PORTFOLIO */
+    #portfolio { background: var(--bg); }
+    .portfolio-tabs { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 2.5rem; }
+    .tab-btn { padding: 0.55rem 1.2rem; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: var(--muted); font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+    .tab-btn.active, .tab-btn:hover { background: var(--accent); color: #000; border-color: var(--accent); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* SHOW ROSTER — TWO-TIER */
+    .roster-section-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.13em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.85rem; display: flex; align-items: center; gap: 0.6rem; }
+    .roster-section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .show-roster-current { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+    .show-tile-current { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 1.1rem 1rem; cursor: pointer; transition: all 0.2s; text-align: center; }
+    .show-tile-current:hover { border-color: rgba(232,98,26,0.4); background: rgba(232,98,26,0.05); transform: translateY(-2px); }
+    .show-tile-current.active { border-color: var(--accent); background: rgba(232,98,26,0.08); }
+    .show-tile-current.active .show-tile-name { color: var(--accent); }
+    .show-artwork-lg { width: 80px; height: 80px; border-radius: 12px; margin: 0 auto 0.8rem; overflow: hidden; }
+    .show-artwork-lg img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; display: block; }
+    .show-roster-past { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 0.6rem; margin-bottom: 2.5rem; }
+    .show-tile-past { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 0.65rem 0.5rem; text-align: center; }
+    .show-artwork-sm { width: 44px; height: 44px; border-radius: 8px; margin: 0 auto 0.5rem; overflow: hidden; }
+    .show-artwork-sm img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; display: block; }
+    .show-tile-name { font-size: 0.76rem; font-weight: 700; line-height: 1.3; margin-bottom: 0.15rem; }
+    .show-tile-role { font-size: 0.64rem; color: var(--muted); }
+    .past-players-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
+    .past-player-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+    .past-player-card .ep-sp iframe { width: 100%; height: 152px; border: none; display: block; }
+    .past-player-show-name { font-size: 0.78rem; font-weight: 700; color: var(--muted); padding: 0.6rem 1rem 0.75rem; }
+
+    /* PAST SHOW TILE — click-to-expand */
+    .show-tile-past { cursor: pointer; }
+    .show-tile-past:hover { border-color: rgba(232,98,26,0.35); background: rgba(232,98,26,0.04); }
+    .show-tile-past.open { border-color: var(--accent); background: rgba(232,98,26,0.07); }
+    .show-tile-past.open .show-tile-name { color: var(--accent); }
+
+    /* POPOUT PLAYER */
+    .past-popout { display: none; background: var(--card); border: 1px solid rgba(232,98,26,0.25); border-radius: 14px; overflow: hidden; margin-bottom: 1.25rem; animation: popIn 0.18s ease; }
+    .past-popout.open { display: block; }
+    .past-popout iframe { width: 100%; height: 152px; border: none; display: block; }
+    .popout-close { background: none; border: none; color: var(--muted); font-size: 0.75rem; font-family: inherit; cursor: pointer; padding: 0.5rem 1rem 0.6rem; display: block; width: 100%; text-align: right; transition: color 0.2s; }
+    .popout-close:hover { color: var(--text); }
+    @keyframes popIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* TYPE FILTER */
+    .type-filter-row { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.75rem; }
+    .type-filter-label { font-size: 0.75rem; color: var(--muted); font-weight: 600; white-space: nowrap; }
+    .filter-btn { padding: 0.35rem 0.9rem; border-radius: 999px; border: 1px solid var(--border); background: transparent; color: var(--muted); font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; display: flex; align-items: center; gap: 0.35rem; }
+    .filter-btn.active, .filter-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(232,98,26,0.07); }
+    .fdot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+    .fdot-all { background: var(--accent); }
+    .fdot-spotify { background: #1db954; }
+    .fdot-youtube { background: #ff0000; }
+    .fdot-social { background: #c0392b; }
+
+    /* EPISODE CARDS */
+    .episode-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.25rem; }
+    .episode-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; transition: border-color 0.2s, transform 0.2s; }
+    .episode-card:hover { border-color: rgba(232,98,26,0.35); transform: translateY(-2px); }
+    .episode-card.hidden { display: none; }
+
+    .ep-yt { position: relative; width: 100%; padding-bottom: 56.25%; background: #1a1008; }
+    .ep-yt iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
+    .ep-sp { background: #050e08; }
+    .ep-sp iframe { width: 100%; height: 152px; border: none; display: block; }
+    .ep-placeholder-thumb { height: 140px; background: linear-gradient(135deg, #1a0e06, #2d1a0a); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; }
+
+    .ep-body { padding: 1.1rem 1.25rem 1.25rem; }
+    .ep-meta { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; flex-wrap: wrap; }
+    .ep-badge { font-size: 0.65rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; padding: 0.18rem 0.55rem; border-radius: 4px; }
+    .badge-spotify { background: #1db954; color: #000; }
+    .badge-youtube { background: #ff0000; color: #fff; }
+    .badge-social { background: var(--accent2); color: #fff; }
+    .ep-show-name { font-size: 0.75rem; color: var(--muted); }
+    .ep-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 0.3rem; line-height: 1.4; }
+    .ep-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
+    .ep-stats { margin-top: 0.6rem; font-size: 0.78rem; color: var(--muted); }
+
+    .ep-empty { display: none; text-align: center; padding: 3rem 1rem; color: var(--muted); font-size: 0.95rem; grid-column: 1/-1; }
+    .ep-empty.show { display: block; }
+
+    /* GUITAR TAB */
+    .guitar-intro { margin-bottom: 2rem; }
+    .guitar-intro-text { color: var(--muted); font-size: 1rem; line-height: 1.75; max-width: 600px; font-style: italic; border-left: 3px solid var(--accent); padding-left: 1.1rem; }
+    .guitar-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.25rem; }
+    .guitar-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; transition: border-color 0.2s, transform 0.2s; }
+    .guitar-card:hover { border-color: rgba(232,98,26,0.35); transform: translateY(-2px); }
+    .guitar-card-body { padding: 1rem 1.25rem 1.25rem; }
+    .guitar-card-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 0.3rem; }
+    .guitar-card-meta { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
+
+    /* MUSIC GRID */
+    .music-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.25rem; }
+    .music-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; transition: border-color 0.2s, transform 0.2s; }
+    .music-card:hover { border-color: rgba(232,98,26,0.3); transform: translateY(-2px); }
+    .music-cover { height: 160px; background: linear-gradient(135deg, #1a0e06, #2d1a0a); display: flex; align-items: center; justify-content: center; font-size: 3rem; }
+    .music-info { padding: 1.25rem; }
+    .music-title { font-weight: 700; margin-bottom: 0.25rem; }
+    .music-role { font-size: 0.82rem; color: var(--muted); }
+
+    .divider { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+
+    /* TESTIMONIALS */
+    #testimonials { background: var(--bg3); }
+    .testimonials-featured { background: linear-gradient(135deg, rgba(232,98,26,0.09), rgba(192,57,43,0.06)); border: 1px solid rgba(232,98,26,0.2); border-radius: 20px; padding: 3rem; margin-bottom: 2rem; text-align: center; }
+    .quote-mark { font-size: 5rem; color: var(--accent); opacity: 0.35; line-height: 0.5; margin-bottom: 1rem; font-family: Georgia, serif; }
+    .testimonial-text { font-family: 'Playfair Display', serif; font-size: clamp(1.15rem, 2.5vw, 1.5rem); line-height: 1.6; margin-bottom: 1.5rem; font-style: italic; }
+    .testimonial-author { font-weight: 700; color: var(--accent); }
+    .testimonial-role { font-size: 0.85rem; color: var(--muted); }
+    .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.25rem; }
+    .testimonial-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; }
+    .tc-quote { font-size: 0.92rem; color: var(--muted); line-height: 1.7; margin-bottom: 1.25rem; font-style: italic; }
+    .tc-author { font-weight: 700; font-size: 0.9rem; }
+    .tc-role { font-size: 0.8rem; color: var(--muted); }
+
+    /* ABOUT */
+    #about { background: var(--bg2); display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
+    @media (max-width: 768px) { #about { grid-template-columns: 1fr; gap: 3rem; } }
+    .about-img-wrap { position: relative; }
+    .about-img-placeholder { width: 100%; aspect-ratio: 4/5; background: linear-gradient(135deg, #1a0e06, #2d1c0a); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 5rem; color: var(--accent); opacity: 0.4; border: 1px solid var(--border); }
+    .about-accent-box { position: absolute; bottom: -1.5rem; right: -1.5rem; background: var(--accent); color: #000; border-radius: 12px; padding: 1.2rem 1.5rem; font-weight: 800; text-align: center; }
+    .about-accent-box .num { font-size: 2rem; line-height: 1; }
+    .about-accent-box .label { font-size: 0.72rem; letter-spacing: 0.06em; }
+    .about-body p { color: var(--muted); margin-bottom: 1rem; font-size: 1rem; line-height: 1.8; }
+    .about-stats { display: flex; gap: 2rem; margin-top: 2rem; flex-wrap: wrap; }
+    .stat-item .stat-num { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: var(--accent); }
+    .stat-item .stat-label { font-size: 0.82rem; color: var(--muted); }
+
+    /* CONTACT */
+    #contact { background: var(--bg); text-align: center; }
+    .contact-inner { max-width: 600px; margin: 0 auto; }
+    .contact-tagline { font-family: 'Playfair Display', serif; font-size: clamp(1.5rem, 3vw, 2.5rem); margin-bottom: 1rem; }
+    .contact-tagline em { color: var(--accent); font-style: italic; }
+    .contact-sub { color: var(--muted); margin-bottom: 3rem; }
+    .contact-form { display: flex; flex-direction: column; gap: 1rem; text-align: left; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
+    .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+    .form-group label { font-size: 0.8rem; font-weight: 600; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
+    .form-group input, .form-group select, .form-group textarea { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem 1rem; color: var(--text); font-family: inherit; font-size: 0.95rem; outline: none; transition: border-color 0.2s; }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--accent); }
+    .form-group select option { background: #1a1408; }
+    .form-group textarea { resize: vertical; min-height: 120px; }
+    .form-submit { background: var(--accent); color: #000; border: none; padding: 1rem; border-radius: 8px; font-size: 1rem; font-weight: 700; cursor: pointer; font-family: inherit; transition: background 0.2s; margin-top: 0.5rem; }
+    .form-submit:hover { background: var(--accent-hover); }
+    .contact-email { margin-top: 2rem; font-size: 0.88rem; color: var(--muted); }
+    .contact-email a { color: var(--accent); text-decoration: none; }
+
+    footer { background: var(--bg2); border-top: 1px solid var(--border); padding: 2rem 5%; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+    .footer-logo { font-weight: 700; font-size: 0.95rem; }
+    .footer-logo span { color: var(--accent); }
+    .footer-copy { font-size: 0.8rem; color: var(--muted); }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="#hero" class="nav-logo">Josh<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#portfolio">Work</a></li>
+    <li><a href="#testimonials">Reviews</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact" class="nav-cta">Hire Me</a></li>
+  </ul>
+</nav>
+
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="waveform" id="waveform"></div>
+  <div class="hero-content">
+    <span class="hero-eyebrow">Nashville · Available for Remote Work</span>
+    <h1 class="hero-title">Audio that sounds like it costs<br><em>twice what you paid.</em></h1>
+    <p class="hero-sub">Podcast editing, sound design, and music production for creators and brands who demand world-class audio.</p>
+    <div class="hero-tags">
+      <span class="hero-tag">Podcast Production</span>
+      <span class="hero-tag">Sound Design</span>
+      <span class="hero-tag">Music Production</span>
+      <span class="hero-tag">Mix &amp; Master</span>
+    </div>
+    <div class="hero-btns">
+      <a href="#portfolio" class="btn-primary">Hear My Work ↓</a>
+      <a href="#contact" class="btn-ghost">Work With Me →</a>
+    </div>
+  </div>
+</section>
+
+<section id="services">
+  <div class="max-w">
+    <div class="section-header">
+      <p class="section-label">What I Do</p>
+      <h2 class="section-title">Services</h2>
+      <p class="section-sub">End-to-end audio production — from raw recordings to polished, release-ready sound.</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-icon">🎙️</div>
+        <h3 class="service-title">Podcast Production</h3>
+        <p class="service-desc">Professional editing and mixing that makes your show sound like it belongs at the top of the charts.</p>
+        <ul class="service-bullets">
+          <li>Multi-track editing &amp; cleanup</li><li>Noise reduction &amp; EQ</li>
+          <li>Music &amp; SFX integration</li><li>Show notes &amp; transcription</li>
+          <li>Distribution-ready masters</li>
+        </ul>
+        <a href="#contact" class="service-link">Get a quote →</a>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">🎛️</div>
+        <h3 class="service-title">Sound Design</h3>
+        <p class="service-desc">Original, custom audio that gives your project an identity — from film scores to branded audio.</p>
+        <ul class="service-bullets">
+          <li>Original composition &amp; scoring</li><li>Custom SFX design</li>
+          <li>Corporate &amp; branded audio</li><li>Film &amp; video scoring</li>
+          <li>Dialogue editing &amp; mix</li>
+        </ul>
+        <a href="#contact" class="service-link">Get a quote →</a>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">🎸</div>
+        <h3 class="service-title">Music Production</h3>
+        <p class="service-desc">Full-service music production — arrangement, recording, mixing, and mastering across genres.</p>
+        <ul class="service-bullets">
+          <li>Arrangement &amp; production</li><li>Guitar, bass &amp; programming</li>
+          <li>Studio recording &amp; engineering</li><li>Mixing &amp; mastering</li>
+          <li>Vocal production</li>
+        </ul>
+        <a href="#contact" class="service-link">Get a quote →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="portfolio">
+  <div class="max-w">
+    <div class="section-header">
+      <p class="section-label">Selected Work</p>
+      <h2 class="section-title">Portfolio</h2>
+      <p class="section-sub">Podcasts, compositions, and music production work — filter by show or content type.</p>
+    </div>
+
+    <div class="portfolio-tabs">
+      <button class="tab-btn active" onclick="switchTab(event,'podcasts')">🎙️ Podcasts</button>
+      <button class="tab-btn" onclick="switchTab(event,'compositions')">🎬 Compositions</button>
+      <button class="tab-btn" onclick="switchTab(event,'music')">🎵 Music Production</button>
+      <button class="tab-btn" onclick="switchTab(event,'guitar')">🎸 Guitar Playing</button>
+    </div>
+
+    <!-- PODCASTS TAB -->
+    <div id="tab-podcasts" class="tab-panel active">
+
+      <!-- CURRENT SHOWS -->
+      <div class="roster-section-label">Current Shows <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted);font-size:0.78rem;">— click to filter episodes</span></div>
+      <div class="show-roster-current">
+        <div class="show-tile-current active" data-show="all" onclick="filterShow(this,'all')">
+          <div class="show-artwork-lg" style="background:linear-gradient(135deg,#3a1a06,#6b3010);display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:800;color:rgba(255,255,255,0.6);">ALL</div>
+          <div class="show-tile-name">All Current</div>
+          <div class="show-tile-role">Full portfolio</div>
+        </div>
+        <div class="show-tile-current" data-show="moderncto" onclick="filterShow(this,'moderncto')">
+          <div class="show-artwork-lg"><img src="https://i.scdn.co/image/ab67656300005f1f6abd7fc320afe76d69b3efbe" alt="Modern CTO"></div>
+          <div class="show-tile-name">Modern CTO</div>
+          <div class="show-tile-role">Editor &amp; Mixer</div>
+        </div>
+        <div class="show-tile-current" data-show="levelup" onclick="filterShow(this,'levelup')">
+          <div class="show-artwork-lg"><img src="https://i.scdn.co/image/ab67656300005f1ffd8d321d0f82d000ee34eb8e" alt="Level Up Lifestyle"></div>
+          <div class="show-tile-name">Level Up Lifestyle</div>
+          <div class="show-tile-role">Editor &amp; Mixer</div>
+        </div>
+      </div>
+
+      <hr class="divider" />
+
+      <!-- TYPE FILTER -->
+      <div class="type-filter-row">
+        <span class="type-filter-label">Filter by type:</span>
+        <button class="filter-btn active" data-type="all" onclick="filterType(this,'all')"><span class="fdot fdot-all"></span>All</button>
+        <button class="filter-btn" data-type="spotify" onclick="filterType(this,'spotify')"><span class="fdot fdot-spotify"></span>Spotify Episodes</button>
+        <button class="filter-btn" data-type="youtube" onclick="filterType(this,'youtube')"><span class="fdot fdot-youtube"></span>YouTube Episodes</button>
+        <button class="filter-btn" data-type="social" onclick="filterType(this,'social')"><span class="fdot fdot-social"></span>Social Clips</button>
+      </div>
+
+      <!-- EPISODE CARDS — populated dynamically from saved episodes -->
+      <div class="episode-grid" id="episode-grid">
+        <div class="ep-loading" id="ep-loading" style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--muted);font-size:0.9rem;">Loading episodes…</div>
+        <div class="ep-empty" id="ep-empty" style="display:none;">No episodes match this filter.</div>
+      </div>
+
+      <!-- PAST SHOWS -->
+      <hr class="divider" style="margin-top:2.5rem;" />
+      <div class="roster-section-label" style="margin-top:2rem;">Past Shows <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted);font-size:0.78rem;">— tap to preview</span></div>
+      <div class="show-roster-past" id="past-roster">
+
+        <div class="show-tile-past" onclick="togglePast(this,'past-genius')">
+          <div class="show-artwork-sm"><img src="https://i.scdn.co/image/ab67656300005f1f91b3b9a507310449a2fe004c" alt="The Genius Life"></div>
+          <div class="show-tile-name">The Genius Life</div>
+        </div>
+        <div class="show-tile-past" onclick="togglePast(this,'past-toolbox')">
+          <div class="show-artwork-sm"><img src="https://i.scdn.co/image/ab67656300005f1f9b8383c25de0d87e8d13a60b" alt="Toolbox for the Trades"></div>
+          <div class="show-tile-name">Toolbox for the Trades</div>
+        </div>
+        <div class="show-tile-past" onclick="togglePast(this,'past-pest')">
+          <div class="show-artwork-sm"><img src="https://i.scdn.co/image/ab67656300005f1f908d1fff4ac5cd6737b79385" alt="Pest in Class"></div>
+          <div class="show-tile-name">Pest in Class</div>
+        </div>
+        <div class="show-tile-past" onclick="togglePast(this,'past-greatevents')">
+          <div class="show-artwork-sm"><img src="https://i.scdn.co/image/ab67656300005f1f43895c51c20d746f1a9363d1" alt="Great Events"></div>
+          <div class="show-tile-name">Great Events</div>
+        </div>
+        <div class="show-tile-past" onclick="togglePast(this,'past-goodq')">
+          <div class="show-artwork-sm"><img src="https://i.scdn.co/image/ab67656300005f1f3186dcd564b76931855af4d3" alt="Good Question"></div>
+          <div class="show-tile-name">Good Question</div>
+        </div>
+        <div class="show-tile-past" onclick="togglePast(this,'past-mhp')">
+          <div class="show-artwork-sm"><img src="https://i.scdn.co/image/ab67656300005f1fefe903491f06cf5a85b38df2" alt="MHP Broker"></div>
+          <div class="show-tile-name">MHP Broker</div>
+        </div>
+        <div class="show-tile-past" onclick="togglePast(this,'past-afc')">
+          <div class="show-artwork-sm"><img src="https://i.scdn.co/image/ab67656300005f1ff434e0601fd958606413f5cf" alt="After Further Consideration"></div>
+          <div class="show-tile-name">After Further Consideration</div>
+        </div>
+        <div class="show-tile-past" onclick="togglePast(this,'past-st')">
+          <div class="show-artwork-sm"><img src="https://i.scdn.co/image/ab67656300005f1fc83f0256a5cd014292c5cb2e" alt="Mastering ServiceTitan"></div>
+          <div class="show-tile-name">Mastering ServiceTitan</div>
+        </div>
+        <div class="show-tile-past" onclick="togglePast(this,'past-mission')">
+          <div class="show-artwork-sm"><img src="https://i.scdn.co/image/ab67656300005f1f0e8ce392b0021f9724c2d370" alt="Mission Admissions"></div>
+          <div class="show-tile-name">Mission Admissions</div>
+        </div>
+        <div class="show-tile-past" onclick="togglePast(this,'past-app')">
+          <div class="show-artwork-sm"><img src="https://i.scdn.co/image/ab67656300005f1f5c6cd39b4634634f5e63d05f" alt="The Application"></div>
+          <div class="show-tile-name">The Application</div>
+        </div>
+        <div class="show-tile-past" onclick="togglePast(this,'past-money')">
+          <div class="show-artwork-sm"><img src="https://i.scdn.co/image/ab67656300005f1f713a87065378bd69b26628bf" alt="Money RE More"></div>
+          <div class="show-tile-name">Money, RE &amp; More</div>
+        </div>
+        <div class="show-tile-past" onclick="togglePast(this,'past-hiddengem')">
+          <div class="show-artwork-sm"><img src="https://i.scdn.co/image/ab67656300005f1fdd985dcdb7886e4becad4bba" alt="The Hidden Gem"></div>
+          <div class="show-tile-name">The Hidden Gem</div>
+        </div>
+        <div class="show-tile-past" onclick="togglePast(this,'past-aggie')">
+          <div class="show-artwork-sm"><img src="https://i.scdn.co/image/ab67656300005f1fb494fd33db937b7dc1f83cad" alt="Aggie Growth Hacks"></div>
+          <div class="show-tile-name">Aggie Growth Hacks</div>
+        </div>
+        <div class="show-tile-past" onclick="togglePast(this,'past-mettle')">
+          <div class="show-artwork-sm"><img src="https://i.scdn.co/image/ab67656300005f1f73f1268d8a37df0ed3074e70" alt="Made of Mettle"></div>
+          <div class="show-tile-name">Made of Mettle</div>
+        </div>
+        <div class="show-tile-past" onclick="togglePast(this,'past-victory')">
+          <div class="show-artwork-sm"><img src="https://i.scdn.co/image/ab67656300005f1fca69874345000340a971bf32" alt="Victory Groove"></div>
+          <div class="show-tile-name">Victory Groove</div>
+        </div>
+
+      </div><!-- /show-roster-past -->
+
+      <!-- INLINE SPOTIFY POPOUTS — one per past show, hidden by default -->
+      <div class="past-popout" id="past-genius"><iframe src="https://open.spotify.com/embed/episode/0jTUAK7rKlTHP02T0d3jxs?utm_source=generator&theme=0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe><button class="popout-close" onclick="togglePast(null,'past-genius')">&#x2715; Close</button></div>
+      <div class="past-popout" id="past-toolbox"><iframe src="https://open.spotify.com/embed/show/76wMZ1SJV4OAql9HzbnQ87?utm_source=generator&theme=0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe><button class="popout-close" onclick="togglePast(null,'past-toolbox')">&#x2715; Close</button></div>
+      <div class="past-popout" id="past-pest"><iframe src="https://open.spotify.com/embed/show/0xgfGTzqcCflFqwa3e1F0T?utm_source=generator&theme=0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe><button class="popout-close" onclick="togglePast(null,'past-pest')">&#x2715; Close</button></div>
+      <div class="past-popout" id="past-greatevents"><iframe src="https://open.spotify.com/embed/episode/629swpFbztjWbnF2QrueIO?utm_source=generator&theme=0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe><button class="popout-close" onclick="togglePast(null,'past-greatevents')">&#x2715; Close</button></div>
+      <div class="past-popout" id="past-goodq"><iframe src="https://open.spotify.com/embed/show/7FeyqemmrEhgXhXp0UwLEG?utm_source=generator&theme=0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe><button class="popout-close" onclick="togglePast(null,'past-goodq')">&#x2715; Close</button></div>
+      <div class="past-popout" id="past-mhp"><iframe src="https://open.spotify.com/embed/show/6O4MEMM2zcXl5SBJvLchiz?utm_source=generator&theme=0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe><button class="popout-close" onclick="togglePast(null,'past-mhp')">&#x2715; Close</button></div>
+      <div class="past-popout" id="past-afc"><iframe src="https://open.spotify.com/embed/show/7ee4TNklrAPYpTr9FpG4g4?utm_source=generator&theme=0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe><button class="popout-close" onclick="togglePast(null,'past-afc')">&#x2715; Close</button></div>
+      <div class="past-popout" id="past-st"><iframe src="https://open.spotify.com/embed/show/20Ixfbny473CVB2PizMIir?utm_source=generator&theme=0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe><button class="popout-close" onclick="togglePast(null,'past-st')">&#x2715; Close</button></div>
+      <div class="past-popout" id="past-mission"><iframe src="https://open.spotify.com/embed/show/1ddUSqyruCiMIegjuQ3Yvi?utm_source=generator&theme=0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe><button class="popout-close" onclick="togglePast(null,'past-mission')">&#x2715; Close</button></div>
+      <div class="past-popout" id="past-app"><iframe src="https://open.spotify.com/embed/show/2zhwtP0VyKCsEi9KGxVtjw?utm_source=generator&theme=0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe><button class="popout-close" onclick="togglePast(null,'past-app')">&#x2715; Close</button></div>
+      <div class="past-popout" id="past-money"><iframe src="https://open.spotify.com/embed/episode/1s9arKM63umytbAy5NJ0Ji?utm_source=generator&theme=0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe><button class="popout-close" onclick="togglePast(null,'past-money')">&#x2715; Close</button></div>
+      <div class="past-popout" id="past-hiddengem"><iframe src="https://open.spotify.com/embed/show/6fkbXx4EvIqXFmBH5KH5KU?utm_source=generator&theme=0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe><button class="popout-close" onclick="togglePast(null,'past-hiddengem')">&#x2715; Close</button></div>
+      <div class="past-popout" id="past-aggie"><iframe src="https://open.spotify.com/embed/show/0ZwTg6kbHiHiGVubmMQqUw?utm_source=generator&theme=0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe><button class="popout-close" onclick="togglePast(null,'past-aggie')">&#x2715; Close</button></div>
+      <div class="past-popout" id="past-mettle"><iframe src="https://open.spotify.com/embed/episode/5ujMInQ8eDeEXwicrA0aor?utm_source=generator&theme=0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe><button class="popout-close" onclick="togglePast(null,'past-mettle')">&#x2715; Close</button></div>
+      <div class="past-popout" id="past-victory"><iframe src="https://open.spotify.com/embed/episode/0bSAl1v7MAs8bnRpASmRMs?utm_source=generator&theme=0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe><button class="popout-close" onclick="togglePast(null,'past-victory')">&#x2715; Close</button></div>
+
+        </div><!-- /tab-podcasts -->
+
+        <!-- COMPOSITIONS TAB -->
+    <div id="tab-compositions" class="tab-panel">
+      <div class="music-grid">
+        <div class="music-card">
+          <div class="music-cover">🎬</div>
+          <div class="music-info"><p class="music-title">Composition Demo Reel</p><p class="music-role">Podcasts · Corporate · Background music · Full production by Josh</p></div>
+        </div>
+        <div class="music-card">
+          <div class="music-cover">🎞️</div>
+          <div class="music-info"><p class="music-title">God's Editor — Short Film Score</p><p class="music-role">Original score · Dialogue edit · Full audio mix &amp; master</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GUITAR TAB -->
+    <div id="tab-guitar" class="tab-panel">
+      <div class="guitar-grid">
+
+        <div class="guitar-card">
+          <div class="ep-yt"><iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Guitar Video 1" allowfullscreen loading="lazy"></iframe></div>
+          <div class="guitar-card-body">
+            <p class="guitar-card-title">Video Title — Replace Me</p>
+            <p class="guitar-card-meta">Replace the YouTube video ID in the embed URL above with your real video ID.</p>
+          </div>
+        </div>
+
+        <div class="guitar-card">
+          <div class="ep-yt"><iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Guitar Video 2" allowfullscreen loading="lazy"></iframe></div>
+          <div class="guitar-card-body">
+            <p class="guitar-card-title">Video Title — Replace Me</p>
+            <p class="guitar-card-meta">Replace the YouTube video ID in the embed URL above with your real video ID.</p>
+          </div>
+        </div>
+
+        <div class="guitar-card">
+          <div class="ep-yt"><iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Guitar Video 3" allowfullscreen loading="lazy"></iframe></div>
+          <div class="guitar-card-body">
+            <p class="guitar-card-title">Video Title — Replace Me</p>
+            <p class="guitar-card-meta">Replace the YouTube video ID in the embed URL above with your real video ID.</p>
+          </div>
+        </div>
+
+        <div class="guitar-card">
+          <div class="ep-yt"><iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Guitar Video 4" allowfullscreen loading="lazy"></iframe></div>
+          <div class="guitar-card-body">
+            <p class="guitar-card-title">Video Title — Replace Me</p>
+            <p class="guitar-card-meta">Replace the YouTube video ID in the embed URL above with your real video ID.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- MUSIC TAB -->
+    <div id="tab-music" class="tab-panel">
+      <div class="music-grid">
+        <div class="music-card"><div class="music-cover">🎹</div><div class="music-info"><p class="music-title">Instrumental Production</p><p class="music-role">Arrangement · Guitars · Programming · Mix &amp; Master</p></div></div>
+        <div class="music-card"><div class="music-cover">🤘</div><div class="music-info"><p class="music-title">Metal</p><p class="music-role">Drum engineering at Stanton Studio · Full production by Josh</p></div></div>
+        <div class="music-card"><div class="music-cover">🎸</div><div class="music-info"><p class="music-title">Acoustic Ballad</p><p class="music-role">Drum engineering at Stanton Studio · Full production by Josh</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="testimonials">
+  <div class="max-w">
+    <div class="section-header">
+      <p class="section-label">Client Reviews</p>
+      <h2 class="section-title">What People Say</h2>
+    </div>
+    <div class="testimonials-featured">
+      <div class="quote-mark">"</div>
+      <p class="testimonial-text">He's so f*#$ing good at editing.</p>
+      <p class="testimonial-author">Shensi Ding</p>
+      <p class="testimonial-role">Co-Founder, Merge</p>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card"><p class="tc-quote">"Josh is quick, he's very responsive, and very receptive to critical feedback, which is a rarity in this industry. We have always been impressed by Josh's work and look forward to working with him in the future. If you need a QUALITY editor, look no further."</p><p class="tc-author">Kyle Ackerman</p><p class="tc-role">The Podcast Architects</p></div>
+      <div class="testimonial-card"><p class="tc-quote">"Josh is amazing. If you're reading this count yourself fortunate the podcast I work for hasn't yet started making enough money to hire him full time. He delivers a top-notch product on time every time."</p><p class="tc-author">David Tanderup</p><p class="tc-role">Good Question Media</p></div>
+      <div class="testimonial-card"><p class="tc-quote">"Amazing personality, skillset and work attitude."</p><p class="tc-author">Saeed Ghaffari</p><p class="tc-role">More And More Network</p></div>
+      <div class="testimonial-card"><p class="tc-quote">"Josh was terrific! Always understood my vision. Would totally recommend."</p><p class="tc-author">Niamh Kierans</p><p class="tc-role">Musical Artist</p></div>
+      <div class="testimonial-card"><p class="tc-quote">"He has a great ear and intuition for all things audio engineering. I highly recommend working with him!"</p><p class="tc-author">Zack Fletcher</p><p class="tc-role">Musical Artist, Moths in the Attic</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="about-img-wrap">
+    <div class="about-img-placeholder">🎧</div>
+    <div class="about-accent-box"><div class="num">10+</div><div class="label">Years in Audio</div></div>
+  </div>
+  <div class="about-body">
+    <p class="section-label">About</p>
+    <h2 class="section-title">Hi, I'm Josh.</h2>
+    <p>I'm a multimedia producer, content specialist, and sound designer based in Nashville. I've spent the last decade obsessing over one thing: making audio sound its absolute best.</p>
+    <p>From world-charting podcasts to indie passion projects, from bedroom demos to studio recordings, I've done it all. I'm known for being fast, receptive to feedback, and delivering work that genuinely makes clients proud.</p>
+    <p>When I'm not in session, I'm probably out trying to touch grass or spending too much on vinyl.</p>
+    <div class="about-stats">
+      <div class="stat-item"><p class="stat-num">15+</p><p class="stat-label">Shows Worked On</p></div>
+      <div class="stat-item"><p class="stat-num">100s</p><p class="stat-label">Episodes Edited</p></div>
+      <div class="stat-item"><p class="stat-num">10+</p><p class="stat-label">Years Experience</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="contact-inner">
+    <p class="section-label">Let's Work Together</p>
+    <h2 class="contact-tagline">Ready to sound<br><em>your absolute best?</em></h2>
+    <p class="contact-sub">Tell me about your project and I'll get back to you within 24 hours.</p>
+    <div class="contact-form">
+      <div class="form-row">
+        <div class="form-group"><label>Your Name</label><input type="text" placeholder="Jane Smith" /></div>
+        <div class="form-group"><label>Email</label><input type="email" placeholder="jane@example.com" /></div>
+      </div>
+      <div class="form-group"><label>Project Type</label>
+        <select><option value="">Select a service...</option><option>Podcast Production</option><option>Sound Design / Composition</option><option>Music Production</option><option>Other</option></select>
+      </div>
+      <div class="form-group"><label>Tell Me About Your Project</label><textarea placeholder="What are you working on? What does it need to sound like?"></textarea></div>
+      <button class="form-submit">Send Message →</button>
+    </div>
+    <p class="contact-email">Prefer email? <a href="mailto:hello@soundsbyjosh.com">hello@soundsbyjosh.com</a></p>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">Josh Pawelczyk<span>.</span></div>
+  <div class="footer-copy">© 2025 Josh Pawelczyk · All rights reserved</div>
+</footer>
+
+<script>
+  const waveform = document.getElementById('waveform');
+  for (let i = 0; i < 80; i++) {
+    const bar = document.createElement('div');
+    bar.className = 'waveform-bar';
+    bar.style.height = (Math.random() * 80 + 10) + 'px';
+    bar.style.animationDelay = (Math.random() * 1.8) + 's';
+    bar.style.animationDuration = (1.2 + Math.random() * 1.2) + 's';
+    waveform.appendChild(bar);
+  }
+
+  function switchTab(e, name) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    e.target.classList.add('active');
+    document.getElementById('tab-' + name).classList.add('active');
+  }
+
+  function filterShow(el, show) {
+    document.querySelectorAll('.show-tile-current').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    activeShow = show;
+    renderEpisodes();
+  }
+
+  function filterType(el, type) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+    activeType = type;
+    renderEpisodes();
+  }
+
+  function togglePast(tile, id) {
+    const popout = document.getElementById(id);
+    const isOpen = popout.classList.contains('open');
+    // Close all other open popouts
+    document.querySelectorAll('.past-popout.open').forEach(p => {
+      p.classList.remove('open');
+    });
+    document.querySelectorAll('.show-tile-past.open').forEach(t => t.classList.remove('open'));
+    // Toggle the clicked one
+    if (!isOpen) {
+      popout.classList.add('open');
+      if (tile) tile.classList.add('open');
+      // Scroll the player into view smoothly
+      setTimeout(() => popout.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+    }
+  }
+  // ── DYNAMIC EPISODES ────────────────────────────────────────────────────
+  let allEpisodes = [];
+  let activeShow = 'all';
+  let activeType = 'all';
+
+  async function loadEpisodes() {
+    try {
+      const res = await fetch('/.netlify/functions/episodes');
+      if (!res.ok) throw new Error();
+      allEpisodes = await res.json();
+    } catch {
+      allEpisodes = [];
+    }
+    renderEpisodes();
+
+    // Fetch live YouTube stats for any YouTube episodes
+    loadYouTubeStats();
+  }
+
+  function renderEpisodes() {
+    const grid = document.getElementById('episode-grid');
+    const loading = document.getElementById('ep-loading');
+    const empty = document.getElementById('ep-empty');
+
+    // Remove all episode cards (keep loading + empty sentinel nodes)
+    grid.querySelectorAll('.episode-card').forEach(el => el.remove());
+    if (loading) loading.style.display = 'none';
+
+    const filtered = allEpisodes.filter(ep => {
+      const showMatch = activeShow === 'all' || ep.showKey === activeShow;
+      const typeMatch = activeType === 'all' || ep.contentType === activeType;
+      return showMatch && typeMatch;
+    });
+
+    if (!filtered.length) {
+      empty.style.display = '';
+      return;
+    }
+    empty.style.display = 'none';
+
+    const badgeClass = { spotify: 'badge-spotify', youtube: 'badge-youtube', social: 'badge-social' };
+    const badgeLabel = { spotify: 'Spotify', youtube: 'YouTube', social: 'Social Clip' };
+
+    for (const ep of filtered) {
+      const card = document.createElement('div');
+      card.className = 'episode-card';
+      card.dataset.show = ep.showKey;
+      card.dataset.type = ep.contentType;
+
+      const bCls = badgeClass[ep.contentType] || 'badge-social';
+      const bLbl = badgeLabel[ep.contentType] || ep.contentType;
+
+      let embedHtml = '';
+      if (ep.platform === 'spotify') {
+        embedHtml = `<div class="ep-sp"><iframe src="${ep.embedUrl}" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe></div>`;
+      } else {
+        // youtube or youtube-short
+        embedHtml = `<div class="ep-yt"><iframe src="${ep.embedUrl}" title="${ep.title}" allowfullscreen loading="lazy"></iframe></div>`;
+      }
+
+      let statsHtml = '';
+      if (ep.platform !== 'spotify' && ep.views != null) {
+        statsHtml = `<p class="ep-stats ep-stats-live" data-yt-stats="${ep.embedId}">&#128065;&#65039; ${ep.views.toLocaleString()} &nbsp;&middot;&nbsp; &#128077; ${(ep.likes || 0).toLocaleString()}</p>`;
+      }
+
+      card.innerHTML = `
+        ${embedHtml}
+        <div class="ep-body">
+          <div class="ep-meta"><span class="ep-badge ${bCls}">${bLbl}</span><span class="ep-show-name">${ep.showName || ''}</span></div>
+          <p class="ep-title">${ep.title || ''}</p>
+          ${ep.description ? `<p class="ep-desc">${ep.description}</p>` : ''}
+          ${statsHtml}
+        </div>
+      `;
+
+      // Insert before the ep-empty sentinel
+      grid.insertBefore(card, empty);
+    }
+  }
+
+  // ── LIVE YOUTUBE STATS ──────────────────────────────────────────────────
+  async function loadYouTubeStats() {
+    const statEls = document.querySelectorAll('[data-yt-stats]');
+    if (!statEls.length) return;
+
+    const ids = [...new Set([...statEls].map(el => el.dataset.ytStats))].filter(Boolean);
+    if (!ids.length) return;
+
+    try {
+      const res = await fetch(`/.netlify/functions/youtube-stats?ids=${ids.join(',')}`);
+      if (!res.ok) throw new Error();
+      const stats = await res.json();
+      statEls.forEach(el => {
+        const s = stats[el.dataset.ytStats];
+        if (s) el.innerHTML = `&#128065;&#65039; ${s.views.toLocaleString()} &nbsp;&middot;&nbsp; &#128077; ${s.likes.toLocaleString()}`;
+        else el.textContent = '';
+      });
+    } catch {
+      statEls.forEach(el => el.textContent = '');
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', loadEpisodes);
+</script>
